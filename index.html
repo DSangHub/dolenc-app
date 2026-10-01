@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dolenc — Condolences, when you cannot be there</title>
+  <meta name="description" content="Create a private loss hashtag. Invite family by text or email. Gifts $15–$1,000 with fees added so the family need is the amount received." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #1c1916;
+      --muted: #5c564e;
+      --paper: #f6f1e8;
+      --card: #fffdf8;
+      --line: #e4d9c8;
+      --gold: #8a6a2f;
+      --rose: #6b3d3d;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: "Source Sans 3", system-ui, sans-serif;
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.55;
+    }
+    a { color: var(--rose); }
+    header {
+      position: sticky; top: 0; z-index: 20;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 22px;
+      background: rgba(246,241,232,.92);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--line);
+    }
+    .brand { font-family: "Cormorant Garamond", serif; font-size: 28px; letter-spacing: .04em; }
+    .brand span { color: var(--gold); }
+    nav { display: flex; gap: 18px; align-items: center; font-size: 14px; }
+    nav a { color: var(--ink); text-decoration: none; }
+    .btn {
+      display: inline-block; border: 0; cursor: pointer;
+      background: var(--ink); color: #fff; text-decoration: none;
+      padding: 11px 18px; border-radius: 999px; font-weight: 600; font-size: 14px;
+    }
+    .btn.gold { background: var(--gold); }
+    .btn.ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+    .hero {
+      max-width: 980px; margin: 0 auto; padding: 64px 22px 36px;
+      display: grid; grid-template-columns: 1.1fr .9fr; gap: 36px; align-items: center;
+    }
+    h1 {
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(36px, 6vw, 62px); line-height: 1.05; font-weight: 600;
+    }
+    .lede { margin-top: 16px; color: var(--muted); font-size: 18px; max-width: 46ch; }
+    .pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+    .pill { font-size: 12px; letter-spacing: .04em; text-transform: uppercase; border: 1px solid var(--line); padding: 6px 10px; border-radius: 999px; color: var(--muted); }
+    .phone {
+      background: var(--card); border: 1px solid var(--line); border-radius: 28px;
+      padding: 22px; box-shadow: 0 18px 40px rgba(28,25,22,.08);
+    }
+    .tag { font-family: "Cormorant Garamond", serif; font-size: 22px; color: var(--gold); }
+    .msg { margin-top: 14px; padding: 14px; background: #f3ece0; border-radius: 14px; font-size: 15px; }
+    .amt { margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap; }
+    .amt button, .chips button {
+      background: #efe4cf; padding: 8px 12px; border-radius: 10px; font-weight: 600;
+      border: 1px solid transparent; cursor: pointer; font: inherit; color: var(--ink);
+    }
+    .amt button.on, .chips button.on { background: var(--ink); color: #fff; }
+    section { max-width: 980px; margin: 0 auto; padding: 28px 22px; }
+    h2 { font-family: "Cormorant Garamond", serif; font-size: 34px; margin-bottom: 10px; }
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 18px; }
+    .hash-wrap { display: grid; grid-template-columns: 1.15fr .85fr; gap: 20px; align-items: start; }
+    .card { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 18px; }
+    .card h3 { font-size: 17px; margin-bottom: 6px; }
+    .card p { color: var(--muted); font-size: 14.5px; }
+    ol.steps { margin: 16px 0 0 18px; color: var(--muted); }
+    ol.steps li { margin: 8px 0; }
+    table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 15px; }
+    th, td { text-align: left; padding: 10px 8px; border-bottom: 1px solid var(--line); }
+    .warn { font-size: 14px; color: var(--muted); margin-top: 10px; }
+    .goal { height: 10px; background: #efe4cf; border-radius: 99px; overflow: hidden; margin: 10px 0; }
+    .goal > i { display: block; height: 100%; background: var(--gold); width: 42%; }
+    .row { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; padding: 6px 0; }
+    .row.total { font-weight: 700; border-top: 1px solid var(--line); margin-top: 6px; padding-top: 10px; font-size: 16px; }
+    .range { width: 100%; accent-color: var(--gold); }
+    .hint { font-size: 13px; color: var(--muted); margin-top: 8px; }
+    input.money, form.signup input, form.signup select, form.signup textarea {
+      width: 100%; padding: 12px; border: 1px solid var(--line); border-radius: 12px; font: inherit; background: #fff;
+    }
+    footer { border-top: 1px solid var(--line); padding: 28px 22px; text-align: center; color: var(--muted); font-size: 13px; }
+    form.signup { display: grid; gap: 10px; margin-top: 16px; }
+    @media (max-width: 800px) {
+      .hero, .grid, .hash-wrap { grid-template-columns: 1fr; }
+      nav a.hide { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">Dolenc<span>.</span>app</div>
+    <nav>
+      <a class="hide" href="#hashtag">Hashtag page</a>
+      <a class="hide" href="#fees">Fees</a>
+      <a class="hide" href="#partners">Partners</a>
+      <a class="btn" href="#start">Create a hashtag</a>
+    </nav>
+  </header>
+
+  <div class="hero">
+    <div>
+      <h1>Sorry I cannot be there.<br>Sending my condolences.</h1>
+      <p class="lede">A quiet way to send thoughts, prayers, and a $15–$1,000 contribution after a death, accident, illness, or pet loss. Fees are added on top so the need listed is the amount received.</p>
+      <div class="pills">
+        <span class="pill">Private hashtag</span>
+        <span class="pill">Text or email invite</span>
+        <span class="pill">$15–$1,000 gifts</span>
+        <span class="pill">Fees added on top</span>
+      </div>
+      <div style="margin-top:22px; display:flex; gap:10px; flex-wrap:wrap;">
+        <a class="btn gold" href="#hashtag">See a hashtag page</a>
+        <a class="btn ghost" href="#partners">Funeral homes & card makers</a>
+      </div>
+    </div>
+    <div class="phone">
+      <div class="tag">#dolenc-mara-rose</div>
+      <p style="margin-top:6px; color:var(--muted); font-size:14px;">Listed by a family member · Sacramento, CA</p>
+      <div class="msg">Hoping for strength to bear this loss. Cannot make the service. Sending love and a small gift toward meals this week.</div>
+      <div class="amt">
+        <button type="button">Words</button>
+        <button type="button">$15</button>
+        <button type="button" class="on">$50</button>
+        <button type="button">$100</button>
+        <button type="button">$1,000</button>
+      </div>
+      <div class="row" style="margin-top:12px;"><span>Gift to family</span><span>$50.00</span></div>
+      <div class="row"><span>Dolenc 2%</span><span>+ $1.00</span></div>
+      <div class="row"><span>Card fee est.</span><span>+ $1.78</span></div>
+      <div class="row total"><span>You pay</span><span>$52.78</span></div>
+      <p style="margin-top:10px; font-size:13px; color:var(--muted);">Family still receives the full $50. Fees are added, not taken from the gift.</p>
+    </div>
+  </div>
+
+  <section id="hashtag">
+    <h2>Hashtag page</h2>
+    <p class="lede" style="margin:0;">Gifts from $15 to $1,000. The family names what they need. Fees are added on top so the listed need is what actually arrives.</p>
+    <div class="hash-wrap" style="margin-top:18px;">
+      <div class="phone">
+        <div class="tag">#dolenc-mara-rose</div>
+        <p style="margin-top:6px; color:var(--muted); font-size:14px;">Accident recovery · zip 95816 · words welcome with or without a gift</p>
+        <p class="msg">Sorry I cannot make it there. Sending condolences and a small contribution. Strength to bear this. Hoping for a speedy recovery.</p>
+
+        <div class="row" style="margin-top:16px;"><span>Family need</span><strong id="needLabel">$400.00</strong></div>
+        <div class="row"><span>Fees to deliver that need</span><strong id="needFeeLabel">+$19.90</strong></div>
+        <div class="row total"><span>Total needed</span><strong id="needTotalLabel">$419.90</strong></div>
+        <div class="goal"><i id="needBar"></i></div>
+        <p class="hint" id="needProgress">$168.00 received toward $400.00 need</p>
+
+        <p style="margin-top:16px; font-weight:600;">Your gift to them ($15–$1,000)</p>
+        <div class="amt chips" id="presets" style="margin-top:8px;">
+          <button type="button" data-amt="0">Words only</button>
+          <button type="button" data-amt="15">$15</button>
+          <button type="button" data-amt="25">$25</button>
+          <button type="button" data-amt="50" class="on">$50</button>
+          <button type="button" data-amt="100">$100</button>
+          <button type="button" data-amt="250">$250</button>
+          <button type="button" data-amt="500">$500</button>
+          <button type="button" data-amt="1000">$1,000</button>
+        </div>
+        <input class="range" id="giftRange" type="range" min="15" max="1000" step="5" value="50" style="margin-top:12px;" />
+        <input class="money" id="giftInput" type="number" min="15" max="1000" step="1" value="50" style="margin-top:10px;" />
+
+        <div class="row" style="margin-top:12px;"><span>Goes to family</span><span id="giftNet">$50.00</span></div>
+        <div class="row"><span>Dolenc 2%</span><span id="giftDolenc">+$1.00</span></div>
+        <div class="row"><span>Stripe est. 2.9% + $0.30</span><span id="giftStripe">+$1.78</span></div>
+        <div class="row total"><span>Total you pay</span><span id="giftPay">$52.78</span></div>
+        <button class="btn gold" type="button" style="margin-top:14px; width:100%;">Send condolences</button>
+      </div>
+
+      <div>
+        <div class="card">
+          <h3>Set the need</h3>
+          <p>Family enters the amount that should land in their account. Dolenc adds 2% plus the card fee so the page can show the real total to raise.</p>
+          <label class="hint" for="familyNeed">Amount the family should receive</label>
+          <input class="money" id="familyNeed" type="number" min="15" max="50000" step="5" value="400" style="margin-top:6px;" />
+          <p class="hint" id="needExplain"></p>
+        </div>
+        <div class="card" style="margin-top:16px;">
+          <h3>Why fees sit on top</h3>
+          <p>If someone chooses $50, the family gets $50. Dolenc 2% and Stripe are added to the card charge. Same rule for the page goal: a $400 need is listed as $400 plus fees = total needed.</p>
+        </div>
+        <div class="card" style="margin-top:16px;">
+          <h3>Limits</h3>
+          <p>Minimum gift $15. Maximum gift $1,000 per send. Words-only is free. Larger help can be split across people rather than one large card.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="how">
+    <h2>How Dolenc works</h2>
+    <p class="lede" style="margin:0;">The family stays in control. Friends do not need an account to read the page. They use the hashtag you send them.</p>
+    <ol class="steps">
+      <li>Someone close to the event creates a short profile: who or what was lost, what happened, optional photo, zip code, and the dollar amount they need.</li>
+      <li>Dolenc issues a unique hashtag and shows <em>family need + fees = total needed</em>.</li>
+      <li>You tell relatives and friends yourself — text, email, or a printed note. Nothing is blasted from the app.</li>
+      <li>They open the hashtag page and leave words, a prayer, and optionally $15–$1,000. Fees are added to what they pay.</li>
+      <li>Optional paid geo flyer: announce the page by zip so nearby people who want to help can find it.</li>
+    </ol>
+    <div class="grid">
+      <div class="card">
+        <h3>Death & funeral</h3>
+        <p>Cannot attend. Still present. Cover a meal, flowers, or travel for those who can be there.</p>
+      </div>
+      <div class="card">
+        <h3>Accident or illness</h3>
+        <p>“Hoping for a speedy recovery.” Help with bills, rides, or time off work.</p>
+      </div>
+      <div class="card">
+        <h3>Pet tragedy</h3>
+        <p>A small circle, a sincere note, help with unexpected vet costs.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="trust">
+    <h2>Steps against fake claims</h2>
+    <div class="grid">
+      <div class="card">
+        <h3>Document when money is involved</h3>
+        <p>Pages that accept currency may be asked for a death notice, hospital or vet receipt, or a police report number before payouts release.</p>
+      </div>
+      <div class="card">
+        <h3>Invite is off-platform</h3>
+        <p>You choose who gets the hashtag. Dolenc does not scrape contacts or post to social feeds.</p>
+      </div>
+      <div class="card">
+        <h3>Hold & review</h3>
+        <p>First payouts can sit in a short review window. Reports of fraud freeze the page.</p>
+      </div>
+    </div>
+    <p class="warn">Dolenc is not a charity, insurer, or funeral director. It is a messaging and payment rail. Families remain responsible for how gifts are used.</p>
+  </section>
+
+  <section id="fees">
+    <h2>Simple fees</h2>
+    <table>
+      <thead>
+        <tr><th>Who</th><th>What</th><th>Dolenc keeps</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Family / person in need</td><td>$15–$1,000 gifts via Stripe; fees added on top</td><td>2% added to the payer total — family receives the gift in full</td></tr>
+        <tr><td>Sympathy card sellers</td><td>Shop profile and promoted cards on a loss page</td><td>8% of card sales we introduce</td></tr>
+        <tr><td>Funeral homes</td><td>Profile + optional zip-based flyer</td><td>8% of billed flyer / referred services we process</td></tr>
+      </tbody>
+    </table>
+    <p class="warn">Card network / Stripe processing (est. 2.9% + $0.30) is added on the same line as Dolenc 2%, so “total needed” and “you pay” already include both. Geo flyers are priced by zip radius and duration.</p>
+  </section>
+
+  <section id="partners">
+    <h2>For funeral homes and card makers</h2>
+    <p class="lede" style="margin:0;">Be findable when a family in your zip is already gathering condolences. No annual contract required for the waitlist.</p>
+    <div class="grid">
+      <div class="card">
+        <h3>Funeral home profile</h3>
+        <p>Hours, service styles, a respectful flyer tied to nearby hashtags. Families opt in before you appear on their page.</p>
+      </div>
+      <div class="card">
+        <h3>Card sellers</h3>
+        <p>Print or digital sympathy cards. Buyer pays you through Dolenc. We take 8% for the placement.</p>
+      </div>
+      <div class="card">
+        <h3>Geo flyer</h3>
+        <p>Paid, zip-bounded announcement. Not a social blast. Meant for neighbors who already want to help.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="start">
+    <h2>Reserve the name. Shape the first pages.</h2>
+    <p class="lede" style="margin:0;">This page is the concept capture for dolenc.app. Leave a note if you want early access as a family tester, funeral home, or card maker.</p>
+    <form class="signup" onsubmit="event.preventDefault(); this.querySelector('button').textContent='Noted — thank you.';">
+      <input type="text" name="name" placeholder="Your name" required />
+      <input type="email" name="email" placeholder="Email" required />
+      <select name="role">
+        <option value="family">I may need a loss page</option>
+        <option value="friend">I want to send condolences</option>
+        <option value="funeral">Funeral home</option>
+        <option value="cards">Card seller</option>
+      </select>
+      <textarea name="note" rows="3" placeholder="Optional: city / zip and what you need first"></textarea>
+      <button class="btn gold" type="submit">Request early access</button>
+    </form>
+  </section>
+
+  <footer>
+    Dolenc.app — condolences when you cannot stand in the room.<br />
+    Thoughts and prayers, in words or in a $15–$1,000 gift. Fees added so the need listed is the need received.
+  </footer>
+  <script>
+    const money = (n) => n.toLocaleString("en-US", { style: "currency", currency: "USD" });
+    const feesOn = (gift) => {
+      const dolenc = gift * 0.02;
+      const stripe = (gift + dolenc) * 0.029 + 0.30;
+      return { dolenc, stripe, pay: gift + dolenc + stripe };
+    };
+    const received = 168;
+    const giftRange = document.getElementById("giftRange");
+    const giftInput = document.getElementById("giftInput");
+    const familyNeed = document.getElementById("familyNeed");
+
+    function setGift(raw) {
+      const words = Number(raw) === 0;
+      const gift = words ? 0 : Math.min(1000, Math.max(15, Math.round(Number(raw) || 0)));
+      if (!words) {
+        giftRange.value = gift;
+        giftInput.value = gift;
+      }
+      document.querySelectorAll("#presets button").forEach((b) => {
+        const amt = Number(b.dataset.amt);
+        b.classList.toggle("on", words ? amt === 0 : amt === gift);
+      });
+      if (words) {
+        document.getElementById("giftNet").textContent = "$0.00";
+        document.getElementById("giftDolenc").textContent = "+ $0.00";
+        document.getElementById("giftStripe").textContent = "+ $0.00";
+        document.getElementById("giftPay").textContent = "$0.00";
+        return;
+      }
+      const f = feesOn(gift);
+      document.getElementById("giftNet").textContent = money(gift);
+      document.getElementById("giftDolenc").textContent = "+ " + money(f.dolenc);
+      document.getElementById("giftStripe").textContent = "+ " + money(f.stripe);
+      document.getElementById("giftPay").textContent = money(f.pay);
+    }
+
+    function setNeed() {
+      const need = Math.max(15, Number(familyNeed.value) || 400);
+      const f = feesOn(need);
+      document.getElementById("needLabel").textContent = money(need);
+      document.getElementById("needFeeLabel").textContent = "+ " + money(f.pay - need);
+      document.getElementById("needTotalLabel").textContent = money(f.pay);
+      document.getElementById("needBar").style.width = Math.min(100, (received / need) * 100) + "%";
+      const stillNeed = Math.max(0, need - received);
+      const stillFees = stillNeed ? feesOn(stillNeed).pay - stillNeed : 0;
+      document.getElementById("needProgress").textContent =
+        money(received) + " received toward " + money(need) + " need · " +
+        money(stillNeed) + " still to the family" +
+        (stillNeed ? " · " + money(stillFees) + " more in fees to finish" : "");
+      document.getElementById("needExplain").textContent =
+        "To place " + money(need) + " in their hands, this page must collect " + money(f.pay) +
+        " (" + money(need) + " + " + money(f.dolenc) + " Dolenc + " + money(f.stripe) + " card).";
+    }
+
+    document.getElementById("presets").addEventListener("click", (e) => {
+      const b = e.target.closest("button");
+      if (b) setGift(b.dataset.amt);
+    });
+    giftRange.addEventListener("input", () => setGift(giftRange.value));
+    giftInput.addEventListener("input", () => setGift(giftInput.value));
+    familyNeed.addEventListener("input", setNeed);
+    setGift(50);
+    setNeed();
+  </script>
+</body>
+</html>
