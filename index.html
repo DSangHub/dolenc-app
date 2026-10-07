@@ -91,7 +91,16 @@
     }
     footer { border-top: 1px solid var(--line); padding: 28px 22px; text-align: center; color: var(--muted); font-size: 13px; }
     form.signup { display: grid; gap: 10px; margin-top: 16px; }
+    section { scroll-margin-top: 90px; }
+    .directory-filters { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 12px; margin-top: 18px; }
+    [hidden] { display: none !important; }
+    .directory-filters label { display: block; font-weight: 600; font-size: 14px; margin-bottom: 6px; }
+    .directory-filters input, .directory-filters select { width: 100%; padding: 12px; border: 1px solid var(--line); border-radius: 12px; font: inherit; background: #fff; color: var(--ink); min-width: 0; }
+    .directory-links { margin-top: 12px; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+    @media (max-width: 480px) { header { padding: 12px; gap: 8px; } nav { gap: 8px; font-size: 12px; } nav .btn { padding: 9px 11px; font-size: 12px; } .brand { font-size: 23px; } }
     @media (max-width: 800px) {
+      .directory-filters { grid-template-columns: 1fr; }
       .hero, .grid, .hash-wrap { grid-template-columns: 1fr; }
       nav a.hide { display: none; }
     }
@@ -104,6 +113,7 @@
       <a class="hide" href="#hashtag">Hashtag page</a>
       <a class="hide" href="#fees">Fees</a>
       <a class="hide" href="#partners">Partners</a>
+      <a class="directory-nav" href="#funeral-homes">Funeral homes</a>
       <a class="btn" href="#start">Create a hashtag</a>
     </nav>
   </header>
@@ -277,6 +287,133 @@
     </div>
   </section>
 
+  <section id="funeral-homes" aria-labelledby="directory-title">
+    <h2 id="directory-title">Funeral homes in California</h2>
+    <p class="lede" style="margin:0;">Find a funeral home by name, city, or region and connect directly through its website.</p>
+    <p class="hint">A starting directory of 22 public listings, checked October 7, 2026. Listing does not imply a Dolenc partnership or endorsement. Contact the provider directly for current services and details.</p>
+    <div class="directory-filters" id="directory-filters" hidden>
+      <div><label for="funeral-search">Search by name or city</label><input id="funeral-search" type="search" placeholder="Try Fresno, San Diego, or a funeral home name" /></div>
+      <div><label for="funeral-region">Region</label><select id="funeral-region"><option value="">All regions</option><option>Northern California</option><option>Sacramento area</option><option>Bay Area</option><option>Central Valley</option><option>Central Coast</option><option>Southern California</option></select></div>
+      <div><label for="funeral-city">City</label><select id="funeral-city"><option value="">All cities</option><option>Anderson</option><option>Bakersfield</option><option>Corona</option><option>Fresno</option><option>Glendale</option><option>Long Beach</option><option>National City</option><option>Palo Cedro</option><option>Redding</option><option>Riverside</option><option>Sacramento</option><option>San Diego</option><option>San Francisco</option><option>San Jose</option><option>Santa Barbara</option><option>Stockton</option></select></div>
+    </div>
+    <p class="hint" id="funeral-count" role="status" aria-live="polite">22 funeral home listings</p>
+    <div class="grid" id="funeral-results">
+      <article class="card funeral-listing" data-region="Northern California" data-city="Anderson">
+        <h3>Allen &amp; Dahl Funeral Chapel</h3>
+        <p>Anderson, California · Northern California</p>
+        <p class="directory-links"><a href="https://www.allenanddahl.com/" target="_blank" rel="noopener noreferrer">Visit website<span class="sr-only"> for Allen &amp; Dahl Funeral Chapel in Anderson (opens in a new tab)</span></a></p>
+      </article>
+      <article class="card funeral-listing" data-region="Central Valley" data-city="Bakersfield">
+        <h3>Alma Funeral Home &amp; Crematory</h3>
+        <p>Bakersfield, California · Central Valley</p>
+        <p class="directory-links"><a href="https://www.almafuneralhomeandcrematory.com/" target="_blank" rel="noopener noreferrer">Visit website<span class="sr-only"> for Alma Funeral Home &amp; Crematory in Bakersfield (opens in a new tab)</span></a></p>
+      </article>
+      <article class="card funeral-listing" data-region="Central Valley" data-city="Bakersfield">
+        <h3>Doughty-Calhoun-O'Meara Funeral Directors</h3>
+        <p>Bakersfield, California · Central Valley</p>
+        <p class="directory-links"><a href="https://www.dcofuneralhome.com/" target="_blank" rel="noopener noreferrer">Visit website<span class="sr-only"> for Doughty-Calhoun-O'Meara Funeral Directors in Bakersfield (opens in a new tab)</span></a></p>
+      </article>
+      <article class="card funeral-listing" data-region="Southern California" data-city="Corona">
+        <h3>Grimes-Akes Family Funeral Home</h3>
+        <p>Corona, California · Southern California</p>
+        <p class="directory-links"><a href="https://www.akesfamilyfuneralhome.com/directions-corona" target="_blank" rel="noopener noreferrer">Visit website<span class="sr-only"> for Grimes-Akes Family Funeral Home in Corona (opens in a new tab)</span></a></p>
+      </article>
+      <article class="card funeral-listing" data-region="Central Valley" data-city="Fresno">
+        <h3>Farewell Funeral Service</h3>
+        <p>Fresno, California · Central Valley</p>
+        <p class="directory-links"><a href="https://www.farewell.com/our-locations" target="_blank" rel="noopener noreferrer">Visit website<span class="sr-only"> for Farewell Funeral Service in Fresno (opens in a new tab)</span></a></p>
+      </article>
+      <article class="card funeral-listing" data-region="Central Valley" data-city="Fresno">
+        <h3>Whitehurst, Sullivan, Burns &amp; Blair Funeral Home</h3>
+        <p>Fresno, California · Central Valley</p>
+        <p class="directory-links"><a href="https://www.dignitymemorial.com/funeral-homes/california/fresno/whitehurst-sullivan-burns-blair-funeral-home/7024" target="_blank" rel="noopener noreferrer">Visit website<span class="sr-only"> for Whitehurst, Sullivan, Burns &amp; Blair Funeral Home in Fresno (opens in a new tab)</span></a></p>
+      </article>
+      <article class="card funeral-listing" data-region="Southern California" data-city="Glendale">
+        <h3>Forest Lawn — Glendale</h3>
+        <p>Glendale, California · Southern California</p>
+        <p class="directory-links"><a href="https://forestlawn.com/parks/glendale/" target="_blank" rel="noopener noreferrer">Visit website<span class="sr-only"> for Forest Lawn — Glendale in Glendale (opens in a new tab)</span></a></p>
+      </article>
+      <article class="card funeral-listing" data-region="Southern California" data-city="Long Beach">
+        <h3>Forest Lawn — Long Beach</h3>
+        <p>Long Beach, California · Southern California</p>
+        <p class="directory-links"><a href="https://forestlawn.com/parks/long-beach/" target="_blank" rel="noopener noreferrer">Visit website<span class="sr-only"> for Forest Lawn — Long Beach in Long Beach (opens in a new tab)</span></a></p>
+      </article>
+      <article class="card funeral-listing" data-region="Southern California" data-city="National City">
+        <h3>California Cremation &amp; Burial</h3>
+        <p>National City, California · Southern California</p>
+        <p class="directory-links"><a href="https://www.californiacremation.com/" target="_blank" rel="noopener noreferrer">Visit website<span class="sr-only"> for California Cremation &amp; Burial in National City (opens in a new tab)</span></a></p>
+      </article>
+      <article class="card funeral-listing" data-region="Northern California" data-city="Palo Cedro">
+        <h3>Allen &amp; Dahl Funeral Chapel</h3>
+        <p>Palo Cedro, California · Northern California</p>
+        <p class="directory-links"><a href="https://www.allenanddahl.com/" target="_blank" rel="noopener noreferrer">Visit website<span class="sr-only"> for Allen &amp; Dahl Funeral Chapel in Palo Cedro (opens in a new tab)</span></a></p>
+      </article>
+      <article class="card funeral-listing" data-region="Northern California" data-city="Redding">
+        <h3>Allen &amp; Dahl Funeral Chapel</h3>
+        <p>Redding, California · Northern California</p>
+        <p class="directory-links"><a href="https://www.allenanddahl.com/redding-funeral-chapel" target="_blank" rel="noopener noreferrer">Visit website<span class="sr-only"> for Allen &amp; Dahl Funeral Chapel in Redding (opens in a new tab)</span></a></p>
+      </article>
+      <article class="card funeral-listing" data-region="Southern California" data-city="Riverside">
+        <h3>Akes Family Funeral Home</h3>
+        <p>Riverside, California · Southern California</p>
+        <p class="directory-links"><a href="https://www.akesfamilyfuneralhome.com/directions-riverside" target="_blank" rel="noopener noreferrer">Visit website<span class="sr-only"> for Akes Family Funeral Home in Riverside (opens in a new tab)</span></a></p>
+      </article>
+      <article class="card funeral-listing" data-region="Sacramento area" data-city="Sacramento">
+        <h3>Sacramento Memorial Lawn</h3>
+        <p>Sacramento, California · Sacramento area</p>
+        <p class="directory-links"><a href="https://smlfh.com/" target="_blank" rel="noopener noreferrer">Visit website<span class="sr-only"> for Sacramento Memorial Lawn in Sacramento (opens in a new tab)</span></a></p>
+      </article>
+      <article class="card funeral-listing" data-region="Southern California" data-city="San Diego">
+        <h3>California Cremation &amp; Burial</h3>
+        <p>San Diego, California · Southern California</p>
+        <p class="directory-links"><a href="https://www.californiacremation.com/" target="_blank" rel="noopener noreferrer">Visit website<span class="sr-only"> for California Cremation &amp; Burial in San Diego (opens in a new tab)</span></a></p>
+      </article>
+      <article class="card funeral-listing" data-region="Bay Area" data-city="San Francisco">
+        <h3>San Francisco Columbarium &amp; Funeral Home</h3>
+        <p>San Francisco, California · Bay Area</p>
+        <p class="directory-links"><a href="https://www.dignitymemorial.com/funeral-homes/california/san-francisco/san-francisco-columbarium-funeral-home/8131" target="_blank" rel="noopener noreferrer">Visit website<span class="sr-only"> for San Francisco Columbarium &amp; Funeral Home in San Francisco (opens in a new tab)</span></a></p>
+      </article>
+      <article class="card funeral-listing" data-region="Bay Area" data-city="San Jose">
+        <h3>Bay Area Mortuary</h3>
+        <p>San Jose, California · Bay Area</p>
+        <p class="directory-links"><a href="https://bayareamortuary.com/contact" target="_blank" rel="noopener noreferrer">Visit website<span class="sr-only"> for Bay Area Mortuary in San Jose (opens in a new tab)</span></a></p>
+      </article>
+      <article class="card funeral-listing" data-region="Bay Area" data-city="San Jose">
+        <h3>Oak Hill Funeral Home &amp; Memorial Park</h3>
+        <p>San Jose, California · Bay Area</p>
+        <p class="directory-links"><a href="https://www.dignitymemorial.com/funeral-homes/california/san-jose/oak-hill-funeral-home-memorial-park/2473" target="_blank" rel="noopener noreferrer">Visit website<span class="sr-only"> for Oak Hill Funeral Home &amp; Memorial Park in San Jose (opens in a new tab)</span></a></p>
+      </article>
+      <article class="card funeral-listing" data-region="Bay Area" data-city="San Jose">
+        <h3>Sacred Space Funeral and Cremation Services</h3>
+        <p>San Jose, California · Bay Area</p>
+        <p class="directory-links"><a href="https://www.sacredspacememorial.com/" target="_blank" rel="noopener noreferrer">Visit website<span class="sr-only"> for Sacred Space Funeral and Cremation Services in San Jose (opens in a new tab)</span></a></p>
+      </article>
+      <article class="card funeral-listing" data-region="Central Coast" data-city="Santa Barbara">
+        <h3>McDermott-Crockett &amp; Associates Mortuary</h3>
+        <p>Santa Barbara, California · Central Coast</p>
+        <p class="directory-links"><a href="https://www.afterall.com/funeral-cremation/california/santa-barbara/mcdermott-crockett-associates-mortuary/camcd.html" target="_blank" rel="noopener noreferrer">Visit website<span class="sr-only"> for McDermott-Crockett &amp; Associates Mortuary in Santa Barbara (opens in a new tab)</span></a></p>
+      </article>
+      <article class="card funeral-listing" data-region="Central Valley" data-city="Stockton">
+        <h3>Cunningham Funeral Services</h3>
+        <p>Stockton, California · Central Valley</p>
+        <p class="directory-links"><a href="https://www.cunninghamfs.com/" target="_blank" rel="noopener noreferrer">Visit website<span class="sr-only"> for Cunningham Funeral Services in Stockton (opens in a new tab)</span></a></p>
+      </article>
+      <article class="card funeral-listing" data-region="Central Valley" data-city="Stockton">
+        <h3>Stockton Funeral Home &amp; Cremation Service</h3>
+        <p>Stockton, California · Central Valley</p>
+        <p class="directory-links"><a href="https://www.stocktonfh.com/" target="_blank" rel="noopener noreferrer">Visit website<span class="sr-only"> for Stockton Funeral Home &amp; Cremation Service in Stockton (opens in a new tab)</span></a></p>
+      </article>
+      <article class="card funeral-listing" data-region="Central Valley" data-city="Stockton">
+        <h3>Zapata Funeral Home</h3>
+        <p>Stockton, California · Central Valley</p>
+        <p class="directory-links"><a href="https://www.zapatafh.com/" target="_blank" rel="noopener noreferrer">Visit website<span class="sr-only"> for Zapata Funeral Home in Stockton (opens in a new tab)</span></a></p>
+      </article>
+    </div>
+    <p id="funeral-empty" class="card" hidden>No listings match your search. Try another city or choose all regions and cities.</p>
+    <p class="hint">Looking elsewhere in California? <a href="https://www.cafda.org/" target="_blank" rel="noopener noreferrer">Find more through the California Funeral Directors Association</a>. <a href="https://www.cfb.ca.gov/" target="_blank" rel="noopener noreferrer">Check licensing through the California Cemetery and Funeral Bureau</a>.</p>
+    <p style="margin-top:14px;"><a class="btn ghost" href="#start">Funeral home? Request a listing</a></p>
+  </section>
+
   <section id="start">
     <h2>Reserve the name. Shape the first pages.</h2>
     <p class="lede" style="margin:0;">This page is the concept capture for dolenc.app. Leave a note if you want early access as a family tester, funeral home, or card maker.</p>
@@ -299,6 +436,29 @@
     Thoughts and prayers, in words or in a $15–$1,000 gift. Fees added so the need listed is the need received.
   </footer>
   <script>
+    const funeralListings = [...document.querySelectorAll(".funeral-listing")];
+    const funeralSearch = document.getElementById("funeral-search");
+    const funeralRegion = document.getElementById("funeral-region");
+    const funeralCity = document.getElementById("funeral-city");
+    function filterFuneralHomes() {
+      const query = funeralSearch.value.trim().toLocaleLowerCase();
+      let count = 0;
+      funeralListings.forEach((listing) => {
+        const matches = listing.textContent.toLocaleLowerCase().includes(query)
+          && (!funeralRegion.value || listing.dataset.region === funeralRegion.value)
+          && (!funeralCity.value || listing.dataset.city === funeralCity.value);
+        listing.hidden = !matches;
+        if (matches) count++;
+      });
+      document.getElementById("funeral-count").textContent = count + " of " + funeralListings.length + " funeral home listings";
+      document.getElementById("funeral-empty").hidden = count !== 0;
+    }
+    funeralSearch.addEventListener("input", filterFuneralHomes);
+    funeralRegion.addEventListener("change", filterFuneralHomes);
+    funeralCity.addEventListener("change", filterFuneralHomes);
+    document.getElementById("directory-filters").hidden = false;
+    filterFuneralHomes();
+
     const money = (n) => n.toLocaleString("en-US", { style: "currency", currency: "USD" });
     const feesOn = (gift) => {
       const dolenc = gift * 0.02;
