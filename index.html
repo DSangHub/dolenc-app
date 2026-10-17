@@ -6,7 +6,7 @@
   <title>Dolenc — Condolences, when you cannot be there</title>
   <meta name="description" content="Create a private loss hashtag. Invite family by text or email. Gifts $15–$1,000 with fees added so the family need is the amount received." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Source+Sans+3:wght@400;500;600;700&family=Cinzel:wght@400;700&display=swap" rel="stylesheet" />
   <style>
     :root {
       --ink: #1c1916;
@@ -99,7 +99,31 @@
     .directory-links { margin-top: 12px; }
     .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
     @media (max-width: 480px) { header { padding: 12px; gap: 8px; } nav { gap: 8px; font-size: 12px; } nav .btn { padding: 9px 11px; font-size: 12px; } .brand { font-size: 23px; } }
+
+    .ecards { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-top: 20px; }
+    .ecard-wrap { display: flex; flex-direction: column; align-items: center; }
+    .ecard { width: 2in; height: 3in; perspective: 800px; cursor: pointer; position: relative; }
+    @media (min-width: 800px) { .ecard { width: 3in; height: 5in; } }
+    .ecard-inner { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform .6s ease; }
+    .ecard.open .ecard-inner { transform: rotateY(180deg); }
+    .ecard-face { position: absolute; inset: 0; backface-visibility: hidden; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 16px; box-shadow: 0 12px 30px rgba(0,0,0,.18); }
+    .ecard-front { z-index: 2; }
+    .ecard-back { transform: rotateY(180deg); }
+    .ecard.simple .ecard-front { background: #1a1816; color: #e8e0d4; border: 1px solid #3a3530; }
+    .ecard.simple .ecard-back { background: #2a2622; color: #e8e0d4; }
+    .ecard.premium .ecard-front { background: linear-gradient(145deg, #c9a84c, #8a6a2f 40%, #e8d5a3 50%, #8a6a2f 60%, #c9a84c); color: #3a2a0a; border: 2px solid #6a5018; box-shadow: inset 0 0 20px rgba(255,230,150,.4), 0 12px 30px rgba(0,0,0,.25); }
+    .ecard.premium .ecard-back { background: linear-gradient(180deg, #f8f0d8, #e8d5a3); color: #3a2a0a; border: 2px solid #c9a84c; }
+    .ecard.premium .ecard-front, .ecard.premium .ecard-back { font-family: "Cinzel", serif; }
+    .ecard.simple .ecard-front, .ecard.simple .ecard-back { font-family: "Cormorant Garamond", serif; }
+    .ecard h3 { font-size: 18px; margin-bottom: 6px; }
+    .ecard.premium h3 { font-size: 20px; letter-spacing: .04em; }
+    .ecard .price { font-weight: 700; margin-top: 8px; }
+    .ecard textarea { width: 100%; height: 70%; resize: none; border: 0; background: transparent; color: inherit; font: inherit; text-align: center; outline: none; padding: 8px; }
+    .ecard .hint-open { font-size: 12px; opacity: .7; margin-top: 8px; }
+    .cart-bar { position: fixed; bottom: 16px; right: 16px; background: var(--ink); color: #fff; padding: 12px 16px; border-radius: 999px; font-size: 14px; z-index: 30; display: none; box-shadow: 0 8px 20px rgba(0,0,0,.2); }
+    .cart-bar.show { display: block; }
     @media (max-width: 800px) {
+      .ecards { grid-template-columns: 1fr; }
       .directory-filters { grid-template-columns: 1fr; }
       .hero, .grid, .hash-wrap { grid-template-columns: 1fr; }
       nav a.hide { display: none; }
@@ -110,7 +134,8 @@
   <header>
     <div class="brand">Dolenc<span>.</span>app</div>
     <nav>
-      <a class="hide" href="#hashtag">Hashtag page</a>
+      <a href="#hashtag">Hashtag page</a>
+      <a href="#ecards">E-cards</a>
       <a class="hide" href="#fees">Fees</a>
       <a class="hide" href="#partners">Partners</a>
       <a class="directory-nav" href="#funeral-homes">Funeral homes</a>
@@ -130,6 +155,7 @@
       </div>
       <div style="margin-top:22px; display:flex; gap:10px; flex-wrap:wrap;">
         <a class="btn gold" href="#hashtag">See a hashtag page</a>
+        <a class="btn ghost" href="#ecards">E-cards</a>
         <a class="btn ghost" href="#partners">Funeral homes & card makers</a>
       </div>
     </div>
@@ -206,6 +232,49 @@
         </div>
       </div>
     </div>
+  </section>
+
+
+  <section id="ecards">
+    <h2>Dolenc E-cards</h2>
+    <p class="lede" style="margin:0;">Click a card to open it, write your message, then close and add to cart. 2&Prime; &times; 3&Prime; on mobile, 3&Prime; &times; 5&Prime; on desktop.</p>
+    <div class="ecards">
+      <div class="ecard-wrap">
+        <div class="ecard simple" id="cardSimple" onclick="toggleCard(this)">
+          <div class="ecard-inner">
+            <div class="ecard-face ecard-front">
+              <h3>Simple</h3>
+              <p style="font-size:14px; opacity:.85;">Dark & somber</p>
+              <p class="price">$2.99</p>
+              <p class="hint-open">Click to open</p>
+            </div>
+            <div class="ecard-face ecard-back" onclick="event.stopPropagation()">
+              <textarea id="msgSimple" placeholder="Write your heartfelt message..."></textarea>
+              <p class="hint-open" onclick="toggleCard(document.getElementById('cardSimple'))">Click to close</p>
+            </div>
+          </div>
+        </div>
+        <button class="btn" style="margin-top:14px;" onclick="addToCart('Simple Dark Card', 2.99, 'msgSimple')">Add to Cart · $2.99</button>
+      </div>
+      <div class="ecard-wrap">
+        <div class="ecard premium" id="cardPremium" onclick="toggleCard(this)">
+          <div class="ecard-inner">
+            <div class="ecard-face ecard-front">
+              <h3>Premium Gold</h3>
+              <p style="font-size:13px; letter-spacing:.06em;">EMBOSSED</p>
+              <p class="price">$4.95</p>
+              <p class="hint-open">Click to open</p>
+            </div>
+            <div class="ecard-face ecard-back" onclick="event.stopPropagation()">
+              <textarea id="msgPremium" placeholder="Write your heartfelt message..." style="font-family:'Cinzel',serif;"></textarea>
+              <p class="hint-open" onclick="toggleCard(document.getElementById('cardPremium'))">Click to close</p>
+            </div>
+          </div>
+        </div>
+        <button class="btn gold" style="margin-top:14px;" onclick="addToCart('Premium Gold Embossed', 4.95, 'msgPremium')">Add to Cart · $4.95</button>
+      </div>
+    </div>
+    <p class="hint" style="text-align:center; margin-top:16px;">Premium uses a Roman Gothic (Cinzel) face. Both cards stay private to the hashtag page you send them on.</p>
   </section>
 
   <section id="how">
@@ -431,6 +500,8 @@
     </form>
   </section>
 
+  <div class="cart-bar" id="cartBar">Cart: <span id="cartCount">0</span> · <span id="cartTotal">$0.00</span></div>
+
   <footer>
     Dolenc.app — condolences when you cannot stand in the room.<br />
     Thoughts and prayers, in words or in a $15–$1,000 gift. Fees added so the need listed is the need received.
@@ -522,6 +593,16 @@
     familyNeed.addEventListener("input", setNeed);
     setGift(50);
     setNeed();
+    function toggleCard(el) { el.classList.toggle("open"); }
+    let cart = [];
+    function addToCart(name, price, msgId) {
+      const msg = (document.getElementById(msgId).value || "").trim() || "(no message yet)";
+      cart.push({ name, price, msg });
+      document.getElementById("cartCount").textContent = cart.length;
+      document.getElementById("cartTotal").textContent = money(cart.reduce((s, i) => s + i.price, 0));
+      document.getElementById("cartBar").classList.add("show");
+    }
+
   </script>
 </body>
 </html>
