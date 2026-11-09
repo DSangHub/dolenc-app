@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sign up / Sign in — Dolenc</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    :root { --ink:#1c1916; --muted:#5c564e; --paper:#f6f1e8; --card:#fffdf8; --line:#e4d9c8; --gold:#8a6a2f; }
+    * { box-sizing: border-box; margin:0; padding:0; }
+    body { font-family: "Source Sans 3", system-ui, sans-serif; background: var(--paper); color: var(--ink); line-height:1.5; }
+    header { padding: 16px 22px; border-bottom:1px solid var(--line); display:flex; justify-content:space-between; align-items:center; }
+    .brand { font-family:"Cormorant Garamond",serif; font-size:26px; }
+    .brand span { color:var(--gold); }
+    .wrap { max-width: 480px; margin: 40px auto; padding: 0 20px; }
+    h1 { font-family:"Cormorant Garamond",serif; font-size:36px; margin-bottom:8px; }
+    .tabs { display:flex; gap:8px; margin: 20px 0; }
+    .tabs button { flex:1; padding:10px; border:1px solid var(--line); background:#fff; border-radius:10px; cursor:pointer; font-weight:600; }
+    .tabs button.active { background:var(--ink); color:#fff; }
+    form { background:var(--card); border:1px solid var(--line); border-radius:16px; padding:22px; display:grid; gap:12px; }
+    label { font-size:14px; font-weight:600; }
+    input, select, textarea { width:100%; padding:12px; border:1px solid var(--line); border-radius:10px; font:inherit; }
+    button[type="submit"] { background:var(--ink); color:#fff; border:0; padding:14px; border-radius:999px; font-weight:700; cursor:pointer; font-size:16px; }
+    .note { font-size:13px; color:var(--muted); margin-top:12px; text-align:center; }
+    .error { color:#9b2c2c; font-size:14px; }
+    .success { color:#276749; font-size:14px; }
+    .extra { display:none; }
+    .extra.show { display:block; }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="/" class="brand" style="text-decoration:none; color:inherit;">Dolenc<span>.</span>app</a>
+    <a href="/" style="color:var(--ink); text-decoration:none;">← Back</a>
+  </header>
+
+  <div class="wrap">
+    <h1>Sign up / Sign in</h1>
+    <p style="color:var(--muted); margin-bottom:8px;">Choose your account type. Funeral Homes and Card Sellers get their own profiles.</p>
+
+    <div class="tabs">
+      <button type="button" class="active" data-role="user">User</button>
+      <button type="button" data-role="funeral_home">Funeral Home</button>
+      <button type="button" data-role="card_seller">Card Seller</button>
+    </div>
+
+    <form id="authForm">
+      <input type="hidden" id="role" value="user" />
+
+      <div>
+        <label>Full name / Contact name</label>
+        <input id="full_name" required placeholder="Jane Doe" />
+      </div>
+
+      <div class="extra" id="bizFields">
+        <label>Business name</label>
+        <input id="business_name" placeholder="Peaceful Rest Funeral Home" />
+        <label>Phone</label>
+        <input id="phone" placeholder="555-123-4567" />
+        <label>Website (optional)</label>
+        <input id="website" placeholder="https://..." />
+      </div>
+
+      <div>
+        <label>Email</label>
+        <input id="email" type="email" required placeholder="you@example.com" />
+      </div>
+      <div>
+        <label>Password</label>
+        <input id="password" type="password" required minlength="6" placeholder="At least 6 characters" />
+      </div>
+
+      <button type="submit" id="submitBtn">Create account</button>
+      <div id="msg"></div>
+    </form>
+
+    <p class="note">Already have an account? <a href="#" id="toggleMode" style="color:var(--gold); font-weight:700;">Sign in instead</a></p>
+  </div>
+
+  <script>
+    const SUPABASE_URL = 'https://atxozpzesilcjwwglyvj.supabase.co';
+    const SUPABASE_ANON_KEY = 'YOUR_ANON_KEY_HERE'; // ← replace with your project anon/public key
+
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const tabs = document.querySelectorAll('.tabs button');
+    const roleInput = document.getElementById('role');
+    const bizFields = document.getElementById('bizFields');
+    const form = document.getElementById('authForm');
+    const msg = document.getElementById('msg');
+    const submitBtn = document.getElementById('submitBtn');
+    const toggleMode = document.getElementById('toggleMode');
+    let isSignup = true;
+
+    tabs.forEach(btn => {
+      btn.addEventListener('click', () => {
+        tabs.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const role = btn.dataset.role;
+        roleInput.value = role;
+        bizFields.classList.toggle('show', role !== 'user');
+      });
+    });
+
+    toggleMode.addEventListener('click', (e) => {
+      e.preventDefault();
+      isSignup = !isSignup;
+      submitBtn.textContent = isSignup ? 'Create account' : 'Sign in';
+      toggleMode.textContent = isSignup ? 'Sign in instead' : 'Create an account';
+      document.querySelectorAll('.extra, #full_name').forEach(el => {
+        if (el.id === 'full_name' || el.id === 'bizFields') el.style.display = isSignup ? '' : 'none';
+      });
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      msg.innerHTML = '';
+      submitBtn.disabled = true;
+      submitBtn.textContent = isSignup ? 'Creating…' : 'Signing in…';
+
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const role = roleInput.value;
+      const full_name = document.getElementById('full_name').value;
+      const business_name = document.getElementById('business_name').value;
+      const phone = document.getElementById('phone').value;
+      const website = document.getElementById('website').value;
+
+      try {
+        if (isSignup) {
+          const { error } = await supabase.auth.signUp({
+            email,
+            password,
+            options: {
+              data: {
+                full_name,
+                business_name: business_name || full_name,
+                phone,
+                website,
+                role
+              }
+            }
+          });
+          if (error) throw error;
+          msg.innerHTML = '<p class="success">Check your email to confirm the account. Once confirmed, you can sign in.</p>';
+        } else {
+          const { error } = await supabase.auth.signInWithPassword({ email, password });
+          if (error) throw error;
+          const { data: { user } } = await supabase.auth.getUser();
+          const { data: profile } = await supabase.from('users').select('role').eq('id', user.id).single();
+          const r = profile?.role || 'user';
+          if (r === 'funeral_home') window.location.href = '/dashboard/funeral-home';
+          else if (r === 'card_seller') window.location.href = '/dashboard/card-seller';
+          else window.location.href = '/dashboard/user';
+        }
+      } catch (err) {
+        msg.innerHTML = `<p class="error">${err.message}</p>`;
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = isSignup ? 'Create account' : 'Sign in';
+      }
+    });
+  </script>
+</body>
+</html>
