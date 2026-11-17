@@ -22,8 +22,8 @@
     form { background:var(--card); border:1px solid var(--line); border-radius:16px; padding:22px; display:grid; gap:12px; }
     label { font-size:14px; font-weight:600; }
     input, select, textarea { width:100%; padding:12px; border:1px solid var(--line); border-radius:10px; font:inherit; }
-    button[type="submit"] { touch-action:manipulation; } button[type="submit"]:disabled { opacity:.65; cursor:wait; }
-    button[type="submit"] { background:var(--ink); color:#fff; border:0; padding:14px; border-radius:999px; font-weight:700; cursor:pointer; font-size:16px; }
+    button#submitBtn { touch-action:manipulation; } button#submitBtn:disabled { opacity:.65; cursor:wait; }
+    button#submitBtn { background:var(--ink); color:#fff; border:0; padding:14px; border-radius:999px; font-weight:700; cursor:pointer; font-size:16px; }
     .note { font-size:13px; color:var(--muted); margin-top:12px; text-align:center; }
     .error { color:#9b2c2c; font-size:14px; }
     .success { color:#276749; font-size:14px; }
@@ -73,7 +73,7 @@
         <input id="password" type="password" required minlength="6" placeholder="At least 6 characters" />
       </div>
 
-      <button type="button" id="submitBtn">Create account</button>
+      <button type="button" id="submitBtn" onclick="if(window.dolencSubmitAccount){window.dolencSubmitAccount(event)}else{document.getElementById('msg').textContent='Signup script failed to load. Please refresh.'}">Create account</button>
       <div id="msg" role="status" aria-live="polite"></div>
     </form>
 
@@ -117,7 +117,7 @@
     });
 
     const withTimeout = (promise) => Promise.race([promise, new Promise((_, reject) => setTimeout(() => reject(new Error('Connection timed out. Please try again.')), 15000))]);
-    submitBtn.addEventListener('click', () => {
+    submitBtn.addEventListener('pointerdown', () => {
       if (!form.checkValidity()) {
         msg.textContent = 'Please complete all required fields. Password must be at least 6 characters.';
         msg.className = 'error';
@@ -191,7 +191,7 @@
         submitBtn.textContent = isSignup ? 'Create account' : 'Sign in';
       }
     }
-    submitBtn.addEventListener('click', submitAccount);
+    window.dolencSubmitAccount = submitAccount;
     form.addEventListener('submit', submitAccount);
   </script>
 </body>
