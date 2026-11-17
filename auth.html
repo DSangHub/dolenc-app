@@ -146,7 +146,7 @@
       try {
         if (isSignup) {
           if (!dolencClient) throw new Error('Authentication could not load. Refresh this page and try again.');
-          const { data, error } = await withTimeout(supabase.auth.signUp({
+          const { data, error } = await withTimeout(dolencClient.auth.signUp({
             email,
             password,
             options: {
@@ -168,7 +168,7 @@
           msg.className = 'success';
         } else {
           if (!dolencClient) throw new Error('Authentication could not load. Refresh this page and try again.');
-          const { error } = await withTimeout(supabase.auth.signInWithPassword({ email, password }));
+          const { error } = await withTimeout(dolencClient.auth.signInWithPassword({ email, password }));
           if (error) throw error;
           const { data: { user } } = await dolencClient.auth.getUser();
           const { data: existingProfile } = await dolencClient.from('users').select('role').eq('id', user.id).maybeSingle();
