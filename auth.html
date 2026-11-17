@@ -47,7 +47,7 @@
       <button type="button" data-role="card_seller">Card Seller</button>
     </div>
 
-    <form id="authForm">
+    <form id="authForm" method="post" onsubmit="event.preventDefault(); return false;">
       <input type="hidden" id="role" value="user" />
 
       <div>
@@ -73,7 +73,7 @@
         <input id="password" type="password" required minlength="6" placeholder="At least 6 characters" />
       </div>
 
-      <button type="submit" id="submitBtn">Create account</button>
+      <button type="button" id="submitBtn">Create account</button>
       <div id="msg" role="status" aria-live="polite"></div>
     </form>
 
@@ -127,8 +127,9 @@
         msg.className = 'success';
       }
     });
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
+    async function submitAccount(e) {
+      if (e) e.preventDefault();
+      if (!form.reportValidity()) { msg.textContent = 'Please complete all required fields.'; msg.className = 'error'; return; }
       msg.textContent = 'Connecting to Dolenc account service…';
       msg.className = 'success';
       submitBtn.disabled = true;
@@ -189,7 +190,9 @@
         submitBtn.disabled = false;
         submitBtn.textContent = isSignup ? 'Create account' : 'Sign in';
       }
-    });
+    }
+    submitBtn.addEventListener('click', submitAccount);
+    form.addEventListener('submit', submitAccount);
   </script>
 </body>
 </html>
