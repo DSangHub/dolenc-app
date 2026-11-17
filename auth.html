@@ -24,6 +24,10 @@
     input, select, textarea { width:100%; padding:12px; border:1px solid var(--line); border-radius:10px; font:inherit; }
     button#submitBtn { touch-action:manipulation; } button#submitBtn:disabled { opacity:.65; cursor:wait; }
     button#submitBtn { background:var(--ink); color:#fff; border:0; padding:14px; border-radius:999px; font-weight:700; cursor:pointer; font-size:16px; }
+    .password-wrap { position:relative; }
+    .password-wrap input { padding-right:54px; }
+    #togglePassword { position:absolute; right:8px; top:50%; transform:translateY(-50%); display:grid; place-items:center; width:40px; height:40px; border:0; background:transparent; color:var(--muted); cursor:pointer; border-radius:8px; }
+    #togglePassword:focus-visible { outline:2px solid var(--gold); }
     .note { font-size:13px; color:var(--muted); margin-top:12px; text-align:center; }
     .error { color:#9b2c2c; font-size:14px; }
     .success { color:#276749; font-size:14px; }
@@ -70,7 +74,7 @@
       </div>
       <div>
         <label>Password</label>
-        <input id="password" type="password" required minlength="6" placeholder="At least 6 characters" />
+        <div class="password-wrap"><input id="password" type="password" required minlength="6" placeholder="At least 6 characters" /><button type="button" id="togglePassword" aria-label="Show password" aria-pressed="false" title="Show password"><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
       </div>
 
       <button type="button" id="submitBtn" onclick="if(window.dolencSubmitAccount){window.dolencSubmitAccount(event)}else{document.getElementById('msg').textContent='Signup script failed to load. Please refresh.'}">Create account</button>
@@ -86,6 +90,15 @@
 
     const dolencClient = window.supabase?.createClient?.(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+    const passwordField = document.getElementById('password');
+    const passwordToggle = document.getElementById('togglePassword');
+    passwordToggle.addEventListener('click', () => {
+      const visible = passwordField.type === 'password';
+      passwordField.type = visible ? 'text' : 'password';
+      passwordToggle.setAttribute('aria-label', visible ? 'Hide password' : 'Show password');
+      passwordToggle.setAttribute('aria-pressed', String(visible));
+      passwordToggle.title = visible ? 'Hide password' : 'Show password';
+    });
     const tabs = document.querySelectorAll('.tabs button');
     const roleInput = document.getElementById('role');
     const bizFields = document.getElementById('bizFields');
