@@ -82,7 +82,7 @@
       <div id="msg" role="status" aria-live="polite"></div>
     </form>
 
-    <div id="signedInPanel" class="card" hidden style="background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px;margin-top:18px"><h2>You're signed in</h2><p id="signedInEmail"></p><p>Your Dolenc account is active.</p><p><a href="/">Return to Dolenc homepage</a></p><button type="button" id="signOutBtn" style="padding:10px 18px;cursor:pointer">Sign out</button></div>
+    <div id="signedInPanel" class="card" hidden style="background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px;margin-top:18px"><h2>You're signed in</h2><p id="signedInEmail"></p><p>What would you like to do?</p><p><a href="/account.html#create-event" style="display:block;padding:12px;margin:8px 0;background:#8a6a2f;color:white;border-radius:10px;text-align:center">Create an Event</a><a href="/account.html#send-condolences" style="display:block;padding:12px;margin:8px 0;background:#1c1916;color:white;border-radius:10px;text-align:center">Send Condolences</a></p><button type="button" id="signOutBtn" style="padding:10px 18px;cursor:pointer">Sign out</button></div>
     <p class="note" id="modeNote">Already have an account? <a href="#" id="toggleMode" style="color:var(--gold); font-weight:700;">Sign in instead</a></p>
   </div>
 
@@ -108,6 +108,7 @@
     const msg = document.getElementById('msg');
     const submitBtn = document.getElementById('submitBtn');
     const toggleMode = document.getElementById('toggleMode');
+    let isSignup = true;
     const signedInPanel = document.getElementById('signedInPanel');
     function showSignedIn(user) {
       form.hidden = true;
@@ -127,13 +128,13 @@
       toggleMode.textContent = signup ? 'Sign in instead' : 'Create an account';
       document.getElementById('full_name').required = signup;
       document.getElementById('full_name').parentElement.hidden = !signup;
-      bizFields.hidden = !signup;
+      bizFields.hidden = !signup || roleInput.value === 'user';
       document.querySelector('.wrap h1').textContent = signup ? 'Create account' : 'Sign in';
       msg.textContent = '';
     }
     if (new URLSearchParams(location.search).get('mode') === 'signin') setMode(false);
-    if (dolencClient) dolencClient.auth.getUser().then(({data}) => { if (data?.user) showSignedIn(data.user); }).catch(() => {});
-    let isSignup = true;
+    if (dolencClient) dolencClient.auth.getUser().then(({data}) => { if (data?.user) window.location.replace('/account.html'); }).catch(() => {});
+
 
     tabs.forEach(btn => {
       btn.addEventListener('click', () => {
@@ -212,7 +213,7 @@
           }
           const profile = existingProfile;
           const r = profile?.role || 'user';
-          showSignedIn(user);
+          window.location.href = '/account.html';
         }
       } catch (err) {
         msg.textContent = err?.message || 'Account request failed. Please try again.';
