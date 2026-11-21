@@ -1,0 +1,13 @@
+{
+  "name": "dolenc-app",
+  "version": "1.0.0",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "test": "node --test"
+  },
+  "dependencies": {
+    "stripe": "^17.7.0",
+    "@supabase/supabase-js": "^2.49.0"
+  }
+}
