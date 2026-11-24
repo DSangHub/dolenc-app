@@ -238,27 +238,27 @@
 
   <section id="ecards">
     <h2>Dolenc E-cards</h2>
-    <p class="lede" style="margin:0;">Click a card to open it, write your message, then close and add to cart. 2&Prime; &times; 3&Prime; on mobile, 3&Prime; &times; 5&Prime; on desktop.</p>
+    <p class="lede" style="margin:0;">Select Open / Write Card, enter your message, Save & Close, preview, then add to cart. 2&Prime; &times; 3&Prime; on mobile, 3&Prime; &times; 5&Prime; on desktop.</p>
     <div class="ecards">
       <div class="ecard-wrap">
-        <div class="ecard simple" id="cardSimple" onclick="toggleCard(this)">
+        <div class="ecard simple" id="cardSimple">
           <div class="ecard-inner">
             <div class="ecard-face ecard-front">
               <h3>Simple</h3>
               <p style="font-size:14px; opacity:.85;">Dark & somber</p>
               <p class="price">$2.99</p>
-              <p class="hint-open">Click to open</p>
+              <p class="hint-open">Use Open / Write Card</p>
             </div>
             <div class="ecard-face ecard-back" onclick="event.stopPropagation()">
-              <textarea id="msgSimple" placeholder="Write your heartfelt message..."></textarea>
-              <p class="hint-open" onclick="toggleCard(document.getElementById('cardSimple'))">Click to close</p>
+              <textarea aria-label="Personal card message" maxlength="1000" id="msgSimple" placeholder="Write your heartfelt message..."></textarea>
+              <button type="button" class="btn" onclick="saveCard('cardSimple','msgSimple')">Save &amp; Close</button>
             </div>
           </div>
         </div>
-        <button class="btn" style="margin-top:14px;" onclick="addToCart('Simple Dark Card', 2.99, 'msgSimple')">Add to Cart · $2.99</button>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:12px"><button type="button" class="btn" onclick="openCard('cardSimple','msgSimple')">Open / Write Card</button><button type="button" class="btn" onclick="previewCard('cardSimple','msgSimple')">Preview</button></div><p id="cardSimpleStatus" role="status"></p><button class="btn" style="margin-top:14px;" onclick="addToCart('Simple Dark Card', 2.99, 'msgSimple')">Add to Cart · $2.99</button>
       </div>
       <div class="ecard-wrap">
-        <div class="ecard premium" id="cardPremium" onclick="toggleCard(this)">
+        <div class="ecard premium" id="cardPremium">
           <div class="ecard-inner">
             <div class="ecard-face ecard-front">
               <h3>Premium Gold</h3>
@@ -267,16 +267,16 @@
               <p class="hint-open">Click to open</p>
             </div>
             <div class="ecard-face ecard-back" onclick="event.stopPropagation()">
-              <textarea id="msgPremium" placeholder="Write your heartfelt message..." style="font-family:'Cinzel',serif;"></textarea>
-              <p class="hint-open" onclick="toggleCard(document.getElementById('cardPremium'))">Click to close</p>
+              <textarea aria-label="Personal card message" maxlength="1000" id="msgPremium" placeholder="Write your heartfelt message..." style="font-family:'Cinzel',serif;"></textarea>
+              <button type="button" class="btn" onclick="saveCard('cardPremium','msgPremium')">Save &amp; Close</button>
             </div>
           </div>
         </div>
-        <button class="btn gold" style="margin-top:14px;" onclick="addToCart('Premium Gold Embossed', 4.95, 'msgPremium')">Add to Cart · $4.95</button>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:12px"><button type="button" class="btn" onclick="openCard('cardPremium','msgPremium')">Open / Write Card</button><button type="button" class="btn" onclick="previewCard('cardPremium','msgPremium')">Preview</button></div><p id="cardPremiumStatus" role="status"></p><button class="btn gold" style="margin-top:14px;" onclick="addToCart('Premium Gold Embossed', 4.95, 'msgPremium')">Add to Cart · $4.95</button>
       </div>
     </div>
     <p class="hint" style="text-align:center; margin-top:16px;">Premium uses a Roman Gothic (Cinzel) face. Both cards stay private to the hashtag page you send them on.</p>
-  </section>
+  <dialog id="ecardPreview" style="max-width:min(90vw,420px);border:1px solid #a68a52;border-radius:12px;padding:24px"><h3 id="ecardPreviewTitle"></h3><p id="ecardPreviewMessage" style="white-space:pre-wrap;overflow-wrap:anywhere"></p><form method="dialog"><button class="btn" type="submit">Close Preview</button></form></dialog></section>
 
   <section id="how">
     <h2>How Dolenc works</h2>
@@ -432,10 +432,13 @@
     familyNeed.addEventListener("input", setNeed);
     setGift(50);
     setNeed();
-    function toggleCard(el) { el.classList.toggle("open"); }
+    function openCard(id,msg){document.getElementById(id).classList.add('open');document.getElementById(msg).focus();}
+function saveCard(id,msg){const value=document.getElementById(msg).value.trim();if(!value){document.getElementById(id+'Status').textContent='Please write a message first.';return;}document.getElementById(id).classList.remove('open');document.getElementById(id+'Status').textContent='Message saved for this page. Reopen to edit.';document.querySelector('[onclick="openCard(\''+id+'\',\''+msg+'\')"]')?.focus();}
+function previewCard(id,msg){const value=document.getElementById(msg).value.trim();if(!value){openCard(id,msg);return;}const d=document.getElementById('ecardPreview');document.getElementById('ecardPreviewMessage').textContent=value;document.getElementById('ecardPreviewTitle').textContent=id==='cardPremium'?'Premium Gold':'Simple Dark';d.showModal();}
+
     let cart = [];
     function addToCart(name, price, msgId) {
-      const msg = (document.getElementById(msgId).value || "").trim() || "(no message yet)";
+      const msg = (document.getElementById(msgId).value || "").trim(); if(!msg){openCard(msgId==="msgSimple"?"cardSimple":"cardPremium",msgId);return;}
       cart.push({ name, price, msg });
       document.getElementById("cartCount").textContent = cart.length;
       document.getElementById("cartTotal").textContent = money(cart.reduce((s, i) => s + i.price, 0));
